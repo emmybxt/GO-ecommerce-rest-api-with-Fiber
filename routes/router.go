@@ -12,9 +12,20 @@ func Router(app *fiber.App) {
 
 	api.Get("/", controllers.HomePage)
 
-	userApi := app.Group("/users/auth")
+	userApi := app.Group("/api/v1/users/auth")
 
-	userApi.Post("/register", middlewares.ValidateRegisterUser ,controllers.RegisterUser)
+	userApi.Post("/register", middlewares.ValidateRegisterUser, controllers.RegisterUser)
 	userApi.Post("/login", controllers.Login)
+	userApi.Get("/profile", middlewares.Authentication, controllers.UserProfile)
+
+	//address routes
+	addressApi := app.Group("/api/v1/address", middlewares.Authentication)
+	addressApi.Put("/update", controllers.UpdateAddress)
+
+	//product routes
+
+	productApi := app.Group("/api/v1/product", middlewares.Authentication)
+
+	productApi.Post("/", controllers.CreateProduct)
 
 }

@@ -180,3 +180,23 @@ func Login(c *fiber.Ctx) error {
 
 }
 
+
+func UserProfile(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+
+	idLocal := c.Locals("id").(string)
+	userId, err := primitive.ObjectIDFromHex(idLocal)
+	if err != nil {
+		return utils.ErrorResponse(c, 400, "Invalid User ID")
+	}
+
+	var user models.User
+	filter := bson.M{"_id": userId}
+	if err := userCollection.FindOne(ctx, filter).Decode(&user); err != nil {
+		fmt.Println(err)
+		return utils.ErrorResponse(c, 400, "Error retrieving user details")
+	}
+
+	return utils.SuccessMessage(c, "User profile fetched successfully", user)
+}
