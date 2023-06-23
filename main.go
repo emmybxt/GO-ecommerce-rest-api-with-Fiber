@@ -6,8 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"go.mongodb.org/mongo-driver/mongo"
-	"jwt-golang/database"
-	"jwt-golang/routes"
+	"e-commerce-fiber/database"
+	"e-commerce-fiber/routes"
 	"log"
 )
 
@@ -19,6 +19,7 @@ func main() {
 
 	app := fiber.New()
 	app.Use(logger.New())
+
 	routes.Router(app)
 
 	//routesStack := app.Stack()
