@@ -3,6 +3,7 @@ package controllers
 import (
 	"context"
 	"e-commerce-fiber/database"
+	"e-commerce-fiber/models"
 	"e-commerce-fiber/utils"
 	"encoding/json"
 	"fmt"
@@ -49,9 +50,6 @@ func CreateProduct(c *fiber.Ctx) error {
 		return utils.ErrorResponse(c, 400, "Invalid payload request")
 	}
 
-	
-
-
 	// id := req.ID
 	// createdAt := req.CreatedAt
 	// updatedAt := req.UpdatedAt
@@ -65,7 +63,6 @@ func CreateProduct(c *fiber.Ctx) error {
 	req.ID = primitive.NewObjectID()
 	req.CreatedAt = time.Now()
 	req.UpdatedAt = time.Now()
-
 
 	fmt.Println(&req)
 
@@ -83,4 +80,55 @@ func CreateProduct(c *fiber.Ctx) error {
 
 	return utils.SuccessMessage(c, "product created successfully", req)
 
+}
+
+func GetAllProducts(c *fiber.Ctx) error {
+
+	ctx, cancel := context.WithTimeout(context.TODO(), time.Second*8)
+
+	defer cancel()
+
+	cursor, err := productCollection.Find(ctx, bson.M{})
+
+	if err != nil {
+		return utils.ErrorResponse(c, 400, "Error fettching products")
+
+	}
+
+	var products []bson.M
+
+	if err := cursor.All(ctx, &products); err != nil {
+		return utils.ErrorResponse(c, 400, "error parsing products")
+	}
+
+	productsCount := len(products)
+
+	fmt.Println(productsCount)
+
+	return utils.SuccessMessage(c, "products fetched successfully", products)
+
+}
+
+func GetProduct(c *fiber.Ctx) error {
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+
+	defer cancel()
+
+	id := c.Params("id")
+
+	productId, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return utils.ErrorResponse(c, 400, "invalid ObjectId")
+	}
+
+	//check if product id exists
+
+	var product models.Product
+
+	if err := productCollection.FindOne(ctx, bson.M{"_id": productId}).Decode(&product); err != nil {
+		return utils.ErrorResponse(c, 400, "Product id does not exist")
+	}
+
+	return utils.SuccessMessage(c, "product fetched successfully", product)
 }

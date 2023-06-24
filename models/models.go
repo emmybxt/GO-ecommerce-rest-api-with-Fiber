@@ -24,7 +24,7 @@ type Product struct {
 	Name              string             `json:"name,omitempty" bson:"name,omitempty"`
 	Price             float64            `json:"price,omitempty" bson:"price,omitempty"`
 	Description       string             `json:"description,omitempty" bson:"description,omitempty"`
-	AvailableQuantity int                `json:"availableQuantity" bson:"availableQuantity"`
+	AvailableQuantity int32                `json:"availableQuantity" bson:"availableQuantity"`
 	Category          string             `json:"category,omitempty" bson:"category,omitempty"`
 	Images            []string           `json:"images,omitempty" bson:"images,omitempty"`
 	CreatedAt         time.Time          `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
@@ -42,7 +42,7 @@ type ProductsToOrder struct {
 	ProductId   primitive.ObjectID `json:"productId,omitempty" bson:"productId,omitempty"`
 	Name        string             `json:"name,omitempty" bson:"name,omitempty"`
 	Price       float64            `json:"price,omitempty" bson:"price,omitempty"`
-	BuyQuantity int                `json:"buyQuantity" bson:"buyQuantity"`
+	BuyQuantity int32                `json:"buyQuantity" bson:"buyQuantity"`
 	CreatedAt   time.Time          `json:"createdAt,omitempty" bson:"createdAt,omitempty"`
 	UpdatedAt   time.Time          `json:"updatedAt,omitempty" bson:"updatedAt,omitempty"`
 }

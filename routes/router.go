@@ -28,4 +28,15 @@ func Router(app *fiber.App) {
 
 	productApi.Post("/", controllers.CreateProduct)
 
+	productApi.Get("/list", controllers.GetAllProducts)
+
+	productApi.Get("/:id", controllers.GetProduct)
+
+
+	//carts Routes
+
+	cartsApi := app.Group("/api/v1/carts", middlewares.Authentication)
+
+	cartsApi.Post("/", controllers.AddProductToCart)
+
 }
